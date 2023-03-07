@@ -1,3 +1,7 @@
+#NOTE! set permission on 
+# RUN set a permssion /var/www/html/storage/logs
+
+
 # # Set master image for php
 # FROM ubuntu:20.04
 
@@ -50,9 +54,9 @@ COPY . /var/www/html
 # Assign permissions of the working directory to the www-data user
 RUN chown -R www-data:www-data \
         /var/www/html/storage \
-        /var/www/html/bootstrap/cache \
-        /var/www/html/storage/logs
+        /var/www/html/bootstrap/cache
 
+ENTRYPOINT [ "./entry/entrypoint.sh" ]
 # Expose port 9000 and start php-fpm server (for FastCGI Process Manager)
 EXPOSE 9000
 CMD ["php-fpm"]
