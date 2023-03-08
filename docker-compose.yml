@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   #Laravel App
   app:
     build:
@@ -8,7 +7,7 @@ services:
       dockerfile: Dockerfile
     image: hakase-labs/laravel
     container_name: app
-    restart: unless-stopped
+    #restart: unless-stopped
     tty: true
     environment:
       SERVICE_NAME: app
@@ -23,7 +22,7 @@ services:
   nginx:
     image: nginx:alpine
     container_name: nginx
-    restart: unless-stopped
+    #restart: unless-stopped
     tty: true
     ports:
       - "80:80"
@@ -35,23 +34,28 @@ services:
     networks:
       - mynet
 
-  #MySQL Service
-  db:
-    image: mysql:5.7
-    container_name: db
-    restart: unless-stopped
-    tty: true
+  # Database Server
+  database:
+    image: mysql:8.0
     ports:
-      - "3306:3306"
+      -   3306:3306
     environment:
-      MYSQL_DATABASE: laraveldb
-      MYSQL_USER: laraveluser
-      MYSQL_PASSWORD: laravel_db_password
-      MYSQL_ROOT_PASSWORD: mysql_root_password
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u ${DB_USERNAME} --password=${DB_PASSWORD}
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
     volumes:
-      - mysqldata:/var/lib/mysql/
+      - mysqldata:/var/lib/mysql
     networks:
       - mynet
+      
+
 
 #Docker Networks
 networks:

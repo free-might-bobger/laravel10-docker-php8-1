@@ -13,6 +13,7 @@
 # RUN apt-get install -y unzip libpq-dev libcurl4-gnutls-dev php8.1-fpm php8.1 php-fpm
 
 
+
 FROM php:8.1-fpm
 
 # Copy composer.lock and composer.json into the working directory
